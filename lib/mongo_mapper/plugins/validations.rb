@@ -29,7 +29,7 @@ module MongoMapper
         end
 
         def message(instance)
-          super || "has already been taken"
+          super || ValidatesUniquenessOf::message_already_taken
         end
 
         def scope_conditions(instance)
@@ -43,6 +43,10 @@ module MongoMapper
           conditions = {}
           conditions[attribute] = /^#{Regexp.escape(instance[attribute].to_s)}$/i unless case_sensitive
           conditions
+        end
+        
+        def self.message_already_taken
+          "has already been taken"
         end
       end
     end

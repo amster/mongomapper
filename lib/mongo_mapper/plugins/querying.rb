@@ -40,6 +40,20 @@ module MongoMapper
             update_single(id, attributes)
           end
         end
+        
+        def create_or_update(query_options, attrs)
+          raise 'query_options expects Hash' unless query_options.is_a?(Hash)
+          raise 'update_attrs expects Hash' unless attrs.is_a?(Hash)
+          
+          begin
+            create!(attrs)
+          rescue MongoMapper::DocumentNotValid => e_mm_dnv
+            raise unless e_mm_dnv.message.include? MongoMapper::Plugins::Validations::ValidatesUniquenessOf::message_already_taken
+            all(query_options).each do |result|
+              update(result._id, attrs)
+            end
+          end
+        end
 
         def delete(*ids)
           query(:_id => ids.flatten).remove
