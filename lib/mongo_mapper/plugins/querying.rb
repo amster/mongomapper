@@ -43,7 +43,7 @@ module MongoMapper
         
         def create_or_update(query_options, attrs)
           raise 'query_options expects Hash' unless query_options.is_a?(Hash)
-          raise 'update_attrs expects Hash' unless attrs.is_a?(Hash)
+          raise 'attrs expects Hash' unless attrs.is_a?(Hash)
           
           begin
             create!(attrs)
